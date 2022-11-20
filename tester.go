@@ -62,7 +62,7 @@ func runServer(lang, apiPort, ethNode, dbConn string) *exec.Cmd {
 		scanner := bufio.NewScanner(std)
 
 		for scanner.Scan() {
-			fmt.Printf("[ERR] %s\n", scanner.Text())
+			fmt.Printf("[OUT] %s\n", scanner.Text())
 		}
 	}(stdout)
 
@@ -103,7 +103,7 @@ func runUnitTests(lang string) {
 		scanner := bufio.NewScanner(std)
 
 		for scanner.Scan() {
-			fmt.Printf("[ERR] %s\n", scanner.Text())
+			fmt.Printf("[OUT] %s\n", scanner.Text())
 		}
 	}(stdout)
 
