@@ -13,7 +13,7 @@ LANG=RUST sh ./limetester-osx.sh
 
 # Env variables
 ```
-LANG={rust|go|node|java}
+LANG={RUST|GO|NODE|JAVA}
 
 ```
 ## During development
