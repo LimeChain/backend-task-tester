@@ -16,6 +16,8 @@ func chooseServerCommand(lang string) *exec.Cmd {
 	switch lang {
 	case "RUST":
 		return exec.Command("cargo", "run")
+	case "NODE":
+		return exec.Command("node", "start")
 	default:
 		log.Fatalln("Unsupported lang")
 	}
@@ -26,6 +28,8 @@ func chooseUnitTestsCommand(lang string) *exec.Cmd {
 	switch lang {
 	case "RUST":
 		return exec.Command("cargo", "test")
+	case "NODE":
+		return exec.Command("node", "test")
 	default:
 		log.Fatalln("Unsupported lang")
 	}
