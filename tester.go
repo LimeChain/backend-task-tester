@@ -17,7 +17,7 @@ func chooseServerCommand(lang string) *exec.Cmd {
 	case "RUST":
 		return exec.Command("cargo", "run")
 	case "NODE":
-		return exec.Command("node", "start")
+		return exec.Command("npm", "start")
 	case "GO":
 		return exec.Command("go", "run", ".")
 	default:
@@ -31,7 +31,7 @@ func chooseUnitTestsCommand(lang string) *exec.Cmd {
 	case "RUST":
 		return exec.Command("cargo", "test")
 	case "NODE":
-		return exec.Command("node", "test")
+		return exec.Command("npm", "test")
 	case "GO":
 		return exec.Command("go", "test")
 	default:
