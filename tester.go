@@ -8,8 +8,6 @@ import (
 	"os"
 	"os/exec"
 	"time"
-
-	"github.com/ybbus/jsonrpc/v3"
 )
 
 func chooseServerCommand(lang string) *exec.Cmd {
@@ -148,10 +146,10 @@ func main() {
 		time.Sleep(delay * time.Second)
 	}
 
-	rpcClient := jsonrpc.NewClient("http://localhost:" + apiPort)
+	apiClient := NewLimeAPIClient("http://localhost:" + apiPort)
 
 	log.Println("=============== Running Automated Test Suite ===============")
-	runTests(rpcClient)
+	runTests(apiClient)
 	log.Println("=============== Ended Automated Test Suite ===============")
 	log.Printf("TOTAL TESTS: %d\n", total)
 	log.Printf("PASSED: %d, FAIL: %d\n", pass, total-pass)
@@ -172,28 +170,6 @@ func test(testFn testable) {
 	}
 }
 
-// json annotations are only required to transform the structure back to json
-type Transaction struct {
-	TransactionHash   string `json:"transactionHash"`
-	TransactionStatus int    `json:"transactionStatus"`
-	BlockHash         string `json:"blockHash"`
-	BlockNumber       int    `json:"blockNumber"`
-	From              string `json:"from"`
-	To                string `json:"to"`
-	ContractAddress   string `json:"contractAddress"`
-	LogsCount         int    `json:"logsCount"`
-	Input             string `json:"input"`
-	Value             string `json:"value"`
-}
-
-type TransactionResponse struct {
-	Transactions []Transaction
-}
-
-type AuthenticateResponse struct {
-	Token string `json:"token"`
-}
-
 func runTestStartServer(cmd *exec.Cmd) {
 	go func() {
 		if err := cmd.Wait(); err != nil {
@@ -204,12 +180,12 @@ func runTestStartServer(cmd *exec.Cmd) {
 	}()
 }
 
-func runTests(rpcClient jsonrpc.RPCClient) {
+func runTests(rpcClient *LimeClient) {
 	runMidTests(rpcClient)
 	runSeniorTests(rpcClient)
 }
 
-func runMidTests(rpcClient jsonrpc.RPCClient) {
+func runMidTests(rpcClient *LimeClient) {
 	log.Println("=============== Mid Test Suite ===============")
 	test(testEmptyInitialAllTx(rpcClient))
 	test(testExampleTxFetching(rpcClient))
@@ -218,7 +194,7 @@ func runMidTests(rpcClient jsonrpc.RPCClient) {
 	test(testStoredTxAfterMixed(rpcClient))
 }
 
-func runSeniorTests(rpcClient jsonrpc.RPCClient) {
+func runSeniorTests(rpcClient *LimeClient) {
 	log.Println("=============== Senior Test Suite ===============")
 	test(testAuthenticate(rpcClient))
 	test(testGetMyTransactions(rpcClient))

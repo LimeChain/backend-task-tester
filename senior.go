@@ -1,18 +1,14 @@
 package main
 
 import (
-	"context"
 	"errors"
 	"log"
 	"os"
-
-	"github.com/ybbus/jsonrpc/v3"
 )
 
-func testAuthenticate(rpcClient jsonrpc.RPCClient) testable {
+func testAuthenticate(rpcClient *LimeClient) testable {
 	return func() bool {
-		var res *AuthenticateResponse
-		err := rpcClient.CallFor(context.TODO(), &res, "lime_authenticate", "carol", "carol")
+		res, err := rpcClient.PostAuthenticate("carol", "carol")
 
 		if err != nil || res == nil || len(res.Token) == 0 {
 			log.Println("[testAuthenticate] FAIL: No response for carol")
@@ -21,7 +17,7 @@ func testAuthenticate(rpcClient jsonrpc.RPCClient) testable {
 
 		carolToken := res.Token
 
-		err = rpcClient.CallFor(context.TODO(), &res, "lime_authenticate", "dave", "dave")
+		res, err = rpcClient.PostAuthenticate("dave", "dave")
 
 		if err != nil || res == nil || len(res.Token) == 0 {
 			log.Println("[testAuthenticate] FAIL: No response for dave")
@@ -35,7 +31,7 @@ func testAuthenticate(rpcClient jsonrpc.RPCClient) testable {
 			return false
 		}
 
-		err = rpcClient.CallFor(context.TODO(), &res, "lime_authenticate", "george", "george")
+		_, err = rpcClient.PostAuthenticate("george", "george")
 
 		if err == nil {
 			log.Println("[testAuthenticate] FAIL: george got a token, but should not have done so")
@@ -47,21 +43,20 @@ func testAuthenticate(rpcClient jsonrpc.RPCClient) testable {
 	}
 }
 
-func testGetMyTransactions(rpcClient jsonrpc.RPCClient) testable {
+func testGetMyTransactions(rpcClient *LimeClient) testable {
 	return func() bool {
 
-		var authRes *AuthenticateResponse
-		err := rpcClient.CallFor(context.TODO(), &authRes, "lime_authenticate", "carol", "carol")
+		authRes, err := rpcClient.PostAuthenticate("carol", "carol")
 
 		if err != nil || authRes == nil || len(authRes.Token) == 0 {
-			log.Println("[testGetMyTransactions] FAIL: No token for carol")
+			log.Println("[testAuthenticate] FAIL: No response for carol")
 			return false
 		}
 
 		carolToken := authRes.Token
 
-		var res *TransactionResponse
-		err = rpcClient.CallFor(context.TODO(), &res, "lime_getEthTransactions", "f888b842307834343462383533333036623361346639333463393063623939363935363936366438303465646332376662623637343032656262383239346132636338666432b842307830346663663665396636343531313633613233316363376235663961653462323833356466656237666632636235643239363039333433663039613330663739", carolToken)
+		rlpString := "f888b842307834343462383533333036623361346639333463393063623939363935363936366438303465646332376662623637343032656262383239346132636338666432b842307830346663663665396636343531313633613233316363376235663961653462323833356466656237666632636235643239363039333433663039613330663739"
+		res, err := rpcClient.GetEth(rlpString, carolToken)
 
 		if err != nil || res == nil {
 			log.Println("[testGetMyTransactions] FAIL: No response")
@@ -93,7 +88,7 @@ func testGetMyTransactions(rpcClient jsonrpc.RPCClient) testable {
 			return false
 		}
 
-		err = rpcClient.CallFor(context.TODO(), &res, "lime_getMyTransactions", carolToken)
+		res, err = rpcClient.GetMy(carolToken)
 		if err != nil || res == nil {
 			log.Println("[testGetMyTransactions] FAIL: No response")
 			return false
