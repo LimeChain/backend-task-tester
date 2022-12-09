@@ -127,13 +127,13 @@ func main() {
 	ethNode := os.Getenv("ETH_NODE_URL")
 	dbConn := os.Getenv("DB_CONNECTION_URL")
 
-	_, isolation := os.LookupEnv("ISOLATION")
+	_, integrated := os.LookupEnv("INTEGRATED")
 
-	if isolation {
-		log.Println("RUNNING IN ISOLATION MODE. Only run this during the test suite development")
+	if integrated {
+		log.Println("RUNNING IN Integrated MODE. Runs the server and the unit tests for you")
 	}
 
-	if !isolation {
+	if integrated {
 		cmd := runServer(lang, apiPort, ethNode, dbConn)
 		defer killServer(cmd)
 
@@ -154,7 +154,7 @@ func main() {
 	log.Printf("TOTAL TESTS: %d\n", total)
 	log.Printf("PASSED: %d, FAIL: %d\n", pass, total-pass)
 
-	if !isolation {
+	if integrated {
 		runUnitTests(lang)
 	}
 }
