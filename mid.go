@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"strings"
 )
 
 func testEmptyInitialAllTx(rpcClient *LimeClient) testable {
@@ -48,22 +49,22 @@ func testExampleTxFetching(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		if res.Transactions[0].TransactionHash != "0x9b2f6a3c2e1aed2cccf92ba666c22d053ad0d8a5da7aa1fd5477dcd6577b4524" {
+		if strings.ToLower(res.Transactions[0].TransactionHash) != "0x9b2f6a3c2e1aed2cccf92ba666c22d053ad0d8a5da7aa1fd5477dcd6577b4524" {
 			log.Printf("[testExampleTxFetching] FAIL: Wrong tx hash on index %d\n", 0)
 			return false
 		}
 
-		if res.Transactions[2].TransactionHash != "0x71b9e2b44d40498c08a62988fac776d0eac0b5b9613c37f9f6f9a4b888a8b057" {
+		if strings.ToLower(res.Transactions[2].TransactionHash) != "0x71b9e2b44d40498c08a62988fac776d0eac0b5b9613c37f9f6f9a4b888a8b057" {
 			log.Printf("[testExampleTxFetching] FAIL: Wrong tx hash on index %d\n", 2)
 			return false
 		}
 
-		if res.Transactions[1].BlockHash != "0x92557f7e29c39cae6be013ffc817620fcd5233b68405cdfc6e0b5528261e81e5" {
+		if strings.ToLower(res.Transactions[1].BlockHash) != "0x92557f7e29c39cae6be013ffc817620fcd5233b68405cdfc6e0b5528261e81e5" {
 			log.Printf("[testExampleTxFetching] FAIL: Wrong block hash on index %d\n", 1)
 			return false
 		}
 
-		if res.Transactions[3].BlockHash != "0x3ac55cb392661e0d2239267022dc30f32dc4767cdacfd3e342443122b87101d3" {
+		if strings.ToLower(res.Transactions[3].BlockHash) != "0x3ac55cb392661e0d2239267022dc30f32dc4767cdacfd3e342443122b87101d3" {
 			log.Printf("[testExampleTxFetching] FAIL: Wrong block hash on index %d\n", 3)
 			return false
 		}
@@ -78,7 +79,7 @@ func testExampleTxFetching(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		if res.Transactions[0].From != "0xb4d6a98aa8cd5396069c2818adf4ae1a0384b43a" {
+		if strings.ToLower(res.Transactions[0].From) != "0xb4d6a98aa8cd5396069c2818adf4ae1a0384b43a" {
 			log.Printf("[testExampleTxFetching] FAIL: Wrong from index %d\n", 0)
 			return false
 		}
@@ -88,22 +89,22 @@ func testExampleTxFetching(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		if res.Transactions[1].From != "0xf29a6c0f8ee500dc87d0d4eb8b26a6fac7a76767" {
+		if strings.ToLower(res.Transactions[1].From) != "0xf29a6c0f8ee500dc87d0d4eb8b26a6fac7a76767" {
 			log.Printf("[testExampleTxFetching] FAIL: Wrong from index %d\n", 1)
 			return false
 		}
 
-		if res.Transactions[1].To != "0xb0428bf0d49eb5c2239a815b43e59e124b84e303" {
+		if strings.ToLower(res.Transactions[1].To) != "0xb0428bf0d49eb5c2239a815b43e59e124b84e303" {
 			log.Printf("[testExampleTxFetching] FAIL: Wrong to index %d\n", 1)
 			return false
 		}
 
-		if res.Transactions[3].From != "0x58fa6ab2931b73a22d85617125b936bd3f74e765" {
+		if strings.ToLower(res.Transactions[3].From) != "0x58fa6ab2931b73a22d85617125b936bd3f74e765" {
 			log.Printf("[testExampleTxFetching] FAIL: Wrong from index %d\n", 3)
 			return false
 		}
 
-		if res.Transactions[3].To != "0x302fd86163cb9ad5533b3952dafa3b633a82bc51" {
+		if strings.ToLower(res.Transactions[3].To) != "0x302fd86163cb9ad5533b3952dafa3b633a82bc51" {
 			log.Printf("[testExampleTxFetching] FAIL: Wrong to index %d\n", 3)
 			return false
 		}
@@ -162,12 +163,12 @@ func testStoredTxAfterExample(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		if res.Transactions[0].TransactionHash != "0x9b2f6a3c2e1aed2cccf92ba666c22d053ad0d8a5da7aa1fd5477dcd6577b4524" {
+		if strings.ToLower(res.Transactions[0].TransactionHash) != "0x9b2f6a3c2e1aed2cccf92ba666c22d053ad0d8a5da7aa1fd5477dcd6577b4524" {
 			log.Printf("[testStoredTxAfterExample] FAIL: Wrong tx hash on index %d\n", 0)
 			return false
 		}
 
-		if res.Transactions[2].TransactionHash != "0x71b9e2b44d40498c08a62988fac776d0eac0b5b9613c37f9f6f9a4b888a8b057" {
+		if strings.ToLower(res.Transactions[2].TransactionHash) != "0x71b9e2b44d40498c08a62988fac776d0eac0b5b9613c37f9f6f9a4b888a8b057" {
 			log.Printf("[testStoredTxAfterExample] FAIL: Wrong tx hash on index %d\n", 2)
 			return false
 		}
@@ -192,7 +193,7 @@ func testStoredTxAfterExample(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		if res.Transactions[0].From != "0xb4d6a98aa8cd5396069c2818adf4ae1a0384b43a" {
+		if strings.ToLower(res.Transactions[0].From) != "0xb4d6a98aa8cd5396069c2818adf4ae1a0384b43a" {
 			log.Printf("[testStoredTxAfterExample] FAIL: Wrong from index %d\n", 0)
 			return false
 		}
@@ -202,22 +203,22 @@ func testStoredTxAfterExample(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		if res.Transactions[1].From != "0xf29a6c0f8ee500dc87d0d4eb8b26a6fac7a76767" {
+		if strings.ToLower(res.Transactions[1].From) != "0xf29a6c0f8ee500dc87d0d4eb8b26a6fac7a76767" {
 			log.Printf("[testStoredTxAfterExample] FAIL: Wrong from index %d\n", 1)
 			return false
 		}
 
-		if res.Transactions[1].To != "0xb0428bf0d49eb5c2239a815b43e59e124b84e303" {
+		if strings.ToLower(res.Transactions[1].To) != "0xb0428bf0d49eb5c2239a815b43e59e124b84e303" {
 			log.Printf("[testStoredTxAfterExample] FAIL: Wrong to index %d\n", 1)
 			return false
 		}
 
-		if res.Transactions[3].From != "0x58fa6ab2931b73a22d85617125b936bd3f74e765" {
+		if strings.ToLower(res.Transactions[3].From) != "0x58fa6ab2931b73a22d85617125b936bd3f74e765" {
 			log.Printf("[testStoredTxAfterExample] FAIL: Wrong from index %d\n", 3)
 			return false
 		}
 
-		if res.Transactions[3].To != "0x302fd86163cb9ad5533b3952dafa3b633a82bc51" {
+		if strings.ToLower(res.Transactions[3].To) != "0x302fd86163cb9ad5533b3952dafa3b633a82bc51" {
 			log.Printf("[testStoredTxAfterExample] FAIL: Wrong to index %d\n", 3)
 			return false
 		}
@@ -348,7 +349,7 @@ func testStoredTxAfterMixed(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		if res.Transactions[0].From != "0xb4d6a98aa8cd5396069c2818adf4ae1a0384b43a" {
+		if strings.ToLower(res.Transactions[0].From) != "0xb4d6a98aa8cd5396069c2818adf4ae1a0384b43a" {
 			log.Printf("[testStoredTxAfterMixed] FAIL: Wrong from index %d\n", 0)
 			return false
 		}
@@ -358,22 +359,22 @@ func testStoredTxAfterMixed(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		if res.Transactions[1].From != "0xf29a6c0f8ee500dc87d0d4eb8b26a6fac7a76767" {
+		if strings.ToLower(res.Transactions[1].From) != "0xf29a6c0f8ee500dc87d0d4eb8b26a6fac7a76767" {
 			log.Printf("[testStoredTxAfterMixed] FAIL: Wrong from index %d\n", 1)
 			return false
 		}
 
-		if res.Transactions[1].To != "0xb0428bf0d49eb5c2239a815b43e59e124b84e303" {
+		if strings.ToLower(res.Transactions[1].To) != "0xb0428bf0d49eb5c2239a815b43e59e124b84e303" {
 			log.Printf("[testStoredTxAfterMixed] FAIL: Wrong to index %d\n", 1)
 			return false
 		}
 
-		if res.Transactions[3].From != "0x58fa6ab2931b73a22d85617125b936bd3f74e765" {
+		if strings.ToLower(res.Transactions[3].From) != "0x58fa6ab2931b73a22d85617125b936bd3f74e765" {
 			log.Printf("[testStoredTxAfterMixed] FAIL: Wrong from index %d\n", 3)
 			return false
 		}
 
-		if res.Transactions[3].To != "0x302fd86163cb9ad5533b3952dafa3b633a82bc51" {
+		if strings.ToLower(res.Transactions[3].To) != "0x302fd86163cb9ad5533b3952dafa3b633a82bc51" {
 			log.Printf("[testStoredTxAfterMixed] FAIL: Wrong to index %d\n", 3)
 			return false
 		}
