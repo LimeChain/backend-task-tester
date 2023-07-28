@@ -26,8 +26,8 @@ func testEmptyInitialAllTx(rpcClient *LimeClient) testable {
 
 func testExampleTxFetching(rpcClient *LimeClient) testable {
 	return func() bool {
-		rlpString := "f90110b842307839623266366133633265316165643263636366393262613636366332326430353361643064386135646137616131666435343737646364363537376234353234b842307835613537653330353163623932653264343832353135623037653762336431383531373232613734363534363537626436346131346333396361336639636632b842307837316239653262343464343034393863303861363239383866616337373664306561633062356239363133633337663966366639613462383838613862303537b842307863356639366266316235346433333134343235643233373962643737643765643465363434663763366538343961373438333230323862333238643464373938"
-		res, err := rpcClient.GetEth(rlpString, "")
+		transactionHashes := "?transactionHashes=0x9b2f6a3c2e1aed2cccf92ba666c22d053ad0d8a5da7aa1fd5477dcd6577b4524&transactionHashes=0x5a57e3051cb92e2d482515b07e7b3d1851722a74654657bd64a14c39ca3f9cf2&transactionHashes=0x71b9e2b44d40498c08a62988fac776d0eac0b5b9613c37f9f6f9a4b888a8b057&transactionHashes=0xc5f96bf1b54d3314425d2379bd77d7ed4e644f7c6e849a74832028b328d4d798"
+		res, err := rpcClient.GetEth(transactionHashes, "")
 
 		if err != nil || res == nil || len(res.Transactions) == 0 {
 			log.Println("[testExampleTxFetching] FAIL: No response")
@@ -250,15 +250,15 @@ func testStoredTxAfterExample(rpcClient *LimeClient) testable {
 
 func testMixedTxFetching(rpcClient *LimeClient) testable {
 	return func() bool {
-		rlpString := "f90198b842307830376166376634393664353532363434613734336630643662313139316234623539616262626633313238346461366263336665653964393662376333366332b842307834353166613264306237333334656266623233346431306564333634356238643034633530303363316631386633373366316630396237626564383536386663b842307839623266366133633265316165643263636366393262613636366332326430353361643064386135646137616131666435343737646364363537376234353234b842307835613537653330353163623932653264343832353135623037653762336431383531373232613734363534363537626436346131346333396361336639636632b842307837316239653262343464343034393863303861363239383866616337373664306561633062356239363133633337663966366639613462383838613862303537b842307863356639366266316235346433333134343235643233373962643737643765643465363434663763366538343961373438333230323862333238643464373938"
-		res, err := rpcClient.GetEth(rlpString, "")
+		transactionHashes := "?transactionHashes=0x451fa2d0b7334ebfb234d10ed3645b8d04c5003c1f18f373f1f09b7bed8568fc&transactionHashes=0x9b2f6a3c2e1aed2cccf92ba666c22d053ad0d8a5da7aa1fd5477dcd6577b4524&transactionHashes=0x5a57e3051cb92e2d482515b07e7b3d1851722a74654657bd64a14c39ca3f9cf2&transactionHashes=0x71b9e2b44d40498c08a62988fac776d0eac0b5b9613c37f9f6f9a4b888a8b057&transactionHashes=0xc5f96bf1b54d3314425d2379bd77d7ed4e644f7c6e849a74832028b328d4d798"		
+		res, err := rpcClient.GetEth(transactionHashes, "")
 
 		if err != nil || res == nil || len(res.Transactions) == 0 {
 			log.Println("[testMixedTxFetching] FAIL: No response")
 			return false
 		}
 
-		if len(res.Transactions) != 6 {
+		if len(res.Transactions) != 5 {
 			log.Println("[testMixedTxFetching] FAIL: Wrong count of transactions in the db")
 			return false
 		}
@@ -273,13 +273,8 @@ func testMixedTxFetching(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		if res.Transactions[0].TransactionHash != "0x07af7f496d552644a743f0d6b1191b4b59abbbf31284da6bc3fee9d96b7c36c2" {
-			log.Printf("[testMixedTxFetching] FAIL: Wrong tx status on index %d\n", 0)
-			return false
-		}
-
-		if res.Transactions[1].TransactionHash != "0x451fa2d0b7334ebfb234d10ed3645b8d04c5003c1f18f373f1f09b7bed8568fc" {
-			log.Printf("[testMixedTxFetching] FAIL: Wrong tx hash on index %d\n", 1)
+		if res.Transactions[0].TransactionHash != "0x451fa2d0b7334ebfb234d10ed3645b8d04c5003c1f18f373f1f09b7bed8568fc" {
+			log.Printf("[testMixedTxFetching] FAIL: Wrong tx hash on index %d\n", 0)
 			return false
 		}
 
@@ -299,7 +294,7 @@ func testStoredTxAfterMixed(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		if len(res.Transactions) != 6 {
+		if len(res.Transactions) != 5 {
 			log.Println("[testStoredTxAfterMixed] FAIL: Wrong count of transactions in the db")
 			return false
 		}
@@ -400,6 +395,48 @@ func testStoredTxAfterMixed(rpcClient *LimeClient) testable {
 		}
 
 		log.Println("[testStoredTxAfterMixed] SUCCESS")
+		return true
+	}
+}
+
+func testRlp(rpcClient *LimeClient) testable {
+	return func() bool {
+		rlpString := "/f90198b842307830376166376634393664353532363434613734336630643662313139316234623539616262626633313238346461366263336665653964393662376333366332b842307834353166613264306237333334656266623233346431306564333634356238643034633530303363316631386633373366316630396237626564383536386663b842307839623266366133633265316165643263636366393262613636366332326430353361643064386135646137616131666435343737646364363537376234353234b842307835613537653330353163623932653264343832353135623037653762336431383531373232613734363534363537626436346131346333396361336639636632b842307837316239653262343464343034393863303861363239383866616337373664306561633062356239363133633337663966366639613462383838613862303537b842307863356639366266316235346433333134343235643233373962643737643765643465363434663763366538343961373438333230323862333238643464373938"
+		res, err := rpcClient.GetEth(rlpString, "")
+
+		if err != nil || res == nil || len(res.Transactions) == 0 {
+			log.Println("[testRlp] FAIL: No response")
+			return false
+		}
+
+		if len(res.Transactions) != 6 {
+			log.Println("[testRlp] FAIL: Wrong count of transactions in the db")
+			return false
+		}
+
+		if res.Transactions[0].TransactionStatus != 1 {
+			log.Printf("[testRlp] FAIL: Wrong tx status on index %d\n", 0)
+			return false
+		}
+
+		if res.Transactions[1].TransactionStatus != 1 {
+			log.Printf("[testRlp] FAIL: Wrong tx status on index %d\n", 1)
+			return false
+		}
+
+		if res.Transactions[0].TransactionHash != "0x07af7f496d552644a743f0d6b1191b4b59abbbf31284da6bc3fee9d96b7c36c2" {
+			log.Printf("[testRlp] FAIL: Wrong tx status on index %d\n", 0)
+			return false
+		}
+
+		if res.Transactions[1].TransactionHash != "0x451fa2d0b7334ebfb234d10ed3645b8d04c5003c1f18f373f1f09b7bed8568fc" {
+			log.Printf("[testRlp] FAIL: Wrong tx hash on index %d\n", 1)
+			return false
+		}
+
+		// TODO add more cases
+
+		log.Println("[testRlp] SUCCESS")
 		return true
 	}
 }

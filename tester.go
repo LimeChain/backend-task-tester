@@ -126,6 +126,7 @@ func main() {
 	apiPort := os.Getenv("API_PORT")
 	ethNode := os.Getenv("ETH_NODE_URL")
 	dbConn := os.Getenv("DB_CONNECTION_URL")
+	log.Printf("Value of api_port = %s", apiPort)
 
 	_, integrated := os.LookupEnv("INTEGRATED")
 
@@ -192,6 +193,8 @@ func runMidTests(rpcClient *LimeClient) {
 	test(testStoredTxAfterExample(rpcClient))
 	test(testMixedTxFetching(rpcClient))
 	test(testStoredTxAfterMixed(rpcClient))
+	log.Println("=============== Optional Tasks ===============")
+	test(testRlp(rpcClient))
 }
 
 func runSeniorTests(rpcClient *LimeClient) {
