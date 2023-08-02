@@ -126,7 +126,6 @@ func main() {
 	apiPort := os.Getenv("API_PORT")
 	ethNode := os.Getenv("ETH_NODE_URL")
 	dbConn := os.Getenv("DB_CONNECTION_URL")
-	log.Printf("Value of api_port = %s", apiPort)
 
 	_, integrated := os.LookupEnv("INTEGRATED")
 
