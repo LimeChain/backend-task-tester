@@ -50,7 +50,7 @@ func (c *LimeClient) GetAll() (*TransactionResponse, error) {
 }
 
 func (c *LimeClient) GetEth(rlpString, authToken string) (*TransactionResponse, error) {
-	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/lime/eth/%s", c.endpointURL, rlpString), nil)
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/lime/eth%s", c.endpointURL, rlpString), nil)
 	if err != nil {
 		return nil, err
 	}

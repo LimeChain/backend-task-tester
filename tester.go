@@ -192,6 +192,8 @@ func runMidTests(rpcClient *LimeClient) {
 	test(testStoredTxAfterExample(rpcClient))
 	test(testMixedTxFetching(rpcClient))
 	test(testStoredTxAfterMixed(rpcClient))
+	log.Println("=============== Optional Tasks ===============")
+	test(testRlp(rpcClient))
 }
 
 func runSeniorTests(rpcClient *LimeClient) {
