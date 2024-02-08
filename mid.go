@@ -228,7 +228,7 @@ func testStoredTxAfterExample(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		if res.Transactions[1].Value != "50000000000000000" {
+		if res.Transactions[1].Value != 50000000000000000 {
 			log.Printf("[testStoredTxAfterExample] FAIL: Wrong value index %d\n", 1)
 			return false
 		}
@@ -379,7 +379,7 @@ func testStoredTxAfterMixed(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		if res.Transactions[1].Value != "50000000000000000" {
+		if res.Transactions[1].Value != 50000000000000000 {
 			log.Printf("[testStoredTxAfterMixed] FAIL: Wrong value index %d\n", 1)
 			return false
 		}
