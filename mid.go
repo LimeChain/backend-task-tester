@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"strings"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func testEmptyInitialAllTx(rpcClient *LimeClient) testable {
@@ -84,7 +86,8 @@ func testExampleTxFetching(rpcClient *LimeClient) testable {
 				return false
 			}
 
-			if ok := assertTxn(actual, expected); !ok {
+			if !cmp.Equal(expected, actual) {
+				log.Printf("[testExampleTxFetching] FAIL: unexpected diff for %s, %s\n", expected.TransactionHash, cmp.Diff(expected, actual))
 				return false
 			}
 		}
@@ -92,56 +95,6 @@ func testExampleTxFetching(rpcClient *LimeClient) testable {
 		log.Println("[testExampleTxFetching] SUCCESS")
 		return true
 	}
-}
-
-func assertTxn(actual Transaction, expected Transaction) bool {
-	txnHash := actual.TransactionHash
-	if actual.TransactionStatus != expected.TransactionStatus {
-		log.Printf("[testExampleTxFetching] FAIL: Wrong tx status for %s: expected %d, got %d\n", txnHash, expected.TransactionStatus, actual.TransactionStatus)
-		return false
-	}
-
-	if strings.ToLower(actual.BlockHash) != expected.BlockHash {
-		log.Printf("[testExampleTxFetching] FAIL: Wrong block hash for %s: expected %s, got %s\n", txnHash, expected.BlockHash, actual.BlockHash)
-		return false
-	}
-
-	if actual.BlockNumber != expected.BlockNumber {
-		log.Printf("[testExampleTxFetching] FAIL: Wrong block number for %s: expected %d, got %d\n", txnHash, expected.BlockNumber, actual.BlockNumber)
-		return false
-	}
-
-	if strings.ToLower(actual.From) != expected.From {
-		log.Printf("[testExampleTxFetching] FAIL: Wrong from address for %s: expected %s, got %s\n", txnHash, expected.From, actual.From)
-		return false
-	}
-
-	if actual.To != expected.To {
-		log.Printf("[testExampleTxFetching] FAIL: Wrong to address for %s: expected %s, got %s\n", txnHash, expected.To, actual.To)
-		return false
-	}
-
-	if actual.ContractAddress != expected.ContractAddress {
-		log.Printf("[testExampleTxFetching] FAIL: Wrong contractAddress for %s: expected %s, got %s\n", txnHash, expected.ContractAddress, actual.ContractAddress)
-		return false
-	}
-
-	if actual.LogsCount != expected.LogsCount {
-		log.Printf("[testExampleTxFetching] FAIL: Wrong logsCount for %s: expected %d, got %d\n", txnHash, expected.LogsCount, actual.LogsCount)
-		return false
-	}
-
-	if actual.Input != expected.Input {
-		log.Printf("[testExampleTxFetching] FAIL: Wrong input for %s: expected %s, got %s\n", txnHash, expected.Input, actual.Input)
-		return false
-	}
-
-	if actual.Value != expected.Value {
-		log.Printf("[testExampleTxFetching] FAIL: Wrong value for %s: expected %d, got %d\n", txnHash, expected.Value, actual.Value)
-		return false
-	}
-
-	return true
 }
 
 func toMap(txns []Transaction) map[string]Transaction {
