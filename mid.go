@@ -142,7 +142,7 @@ func testStoredTxAfterExample(rpcClient *LimeClient) testable {
 
 func testMixedTxFetching(rpcClient *LimeClient) testable {
 	return func() bool {
-		transactionHashes := "?transactionHashes=0x451fa2d0b7334ebfb234d10ed3645b8d04c5003c1f18f373f1f09b7bed8568fc&transactionHashes=0x9b2f6a3c2e1aed2cccf92ba666c22d053ad0d8a5da7aa1fd5477dcd6577b4524&transactionHashes=0x5a57e3051cb92e2d482515b07e7b3d1851722a74654657bd64a14c39ca3f9cf2&transactionHashes=0x71b9e2b44d40498c08a62988fac776d0eac0b5b9613c37f9f6f9a4b888a8b057&transactionHashes=0xc5f96bf1b54d3314425d2379bd77d7ed4e644f7c6e849a74832028b328d4d798"		
+		transactionHashes := "?transactionHashes=0x451fa2d0b7334ebfb234d10ed3645b8d04c5003c1f18f373f1f09b7bed8568fc&transactionHashes=0x9b2f6a3c2e1aed2cccf92ba666c22d053ad0d8a5da7aa1fd5477dcd6577b4524&transactionHashes=0x5a57e3051cb92e2d482515b07e7b3d1851722a74654657bd64a14c39ca3f9cf2&transactionHashes=0x71b9e2b44d40498c08a62988fac776d0eac0b5b9613c37f9f6f9a4b888a8b057&transactionHashes=0xc5f96bf1b54d3314425d2379bd77d7ed4e644f7c6e849a74832028b328d4d798"
 		res, err := rpcClient.GetEth(transactionHashes, "")
 
 		if err != nil || res == nil || len(res.Transactions) == 0 {
@@ -155,22 +155,31 @@ func testMixedTxFetching(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		if res.Transactions[0].TransactionStatus != 1 {
-			log.Printf("[testMixedTxFetching] FAIL: Wrong tx status on index %d\n", 0)
-			return false
+		txn := Transaction{
+			TransactionHash:   "0x451fa2d0b7334ebfb234d10ed3645b8d04c5003c1f18f373f1f09b7bed8568fc",
+			TransactionStatus: 1,
+			BlockHash:         "0x92557f7e29c39cae6be013ffc817620fcd5233b68405cdfc6e0b5528261e81e5",
+			BlockNumber:       7976373,
+			From:              "0xf29a6c0f8ee500dc87d0d4eb8b26a6fac7a76767",
+			To:                "0xfac0844034620603b4c042b9f7c5cbfa6157e626",
+			Input:             "0x",
+			Value:             50000000000000000,
 		}
 
-		if res.Transactions[1].TransactionStatus != 1 {
-			log.Printf("[testMixedTxFetching] FAIL: Wrong tx status on index %d\n", 1)
-			return false
-		}
+		expectedMixedTxns := append([]Transaction{txn}, expectedTxns...)
+		actualTxns := toMap(res.Transactions)
+		for _, expected := range expectedMixedTxns {
+			actual, found := actualTxns[expected.TransactionHash]
+			if !found {
+				log.Printf("[testMixedTxFetching] FAIL: Didn't find expected txn for %s\n", expected.TransactionHash)
+				return false
+			}
 
-		if res.Transactions[0].TransactionHash != "0x451fa2d0b7334ebfb234d10ed3645b8d04c5003c1f18f373f1f09b7bed8568fc" {
-			log.Printf("[testMixedTxFetching] FAIL: Wrong tx hash on index %d\n", 0)
-			return false
+			if !cmp.Equal(expected, actual) {
+				log.Printf("[testMixedTxFetching] FAIL: unexpected diff for %s, %s\n", expected.TransactionHash, cmp.Diff(expected, actual))
+				return false
+			}
 		}
-
-		// TODO add more cases
 
 		log.Println("[testMixedTxFetching] SUCCESS")
 		return true
