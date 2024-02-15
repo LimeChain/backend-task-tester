@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"strings"
 
 	"github.com/google/go-cmp/cmp"
 )
@@ -97,6 +98,11 @@ func testExampleTxFetching(rpcClient *LimeClient) testable {
 				return false
 			}
 
+			actual.BlockHash = strings.ToLower(actual.BlockHash)
+			actual.From = strings.ToLower(actual.From)
+			actual.To = strings.ToLower(actual.To)
+			actual.ContractAddress = strings.ToLower(actual.ContractAddress)
+
 			if !cmp.Equal(expected, actual) {
 				log.Printf("[testExampleTxFetching] FAIL: unexpected diff for %s, %s\n", expected.TransactionHash, cmp.Diff(expected, actual))
 				return false
@@ -139,6 +145,11 @@ func testStoredTxAfterExample(rpcClient *LimeClient) testable {
 				return false
 			}
 
+			actual.BlockHash = strings.ToLower(actual.BlockHash)
+			actual.From = strings.ToLower(actual.From)
+			actual.To = strings.ToLower(actual.To)
+			actual.ContractAddress = strings.ToLower(actual.ContractAddress)
+
 			if !cmp.Equal(expected, actual) {
 				log.Printf("[testStoredTxAfterExample] FAIL: unexpected diff for %s, %s\n", expected.TransactionHash, cmp.Diff(expected, actual))
 				return false
@@ -161,7 +172,7 @@ func testMixedTxFetching(rpcClient *LimeClient) testable {
 		}
 
 		if len(res.Transactions) != len(expectedMixedTxns) {
-			log.Printf("[testMixedTxFetching] FAIL: Wrong count of transactions in the db; expected %d, got %d\n", len(expectedTxns), len(res.Transactions))
+			log.Printf("[testMixedTxFetching] FAIL: Wrong count of transactions in the db; expected %d, got %d\n", len(expectedMixedTxns), len(res.Transactions))
 			return false
 		}
 
@@ -172,6 +183,11 @@ func testMixedTxFetching(rpcClient *LimeClient) testable {
 				log.Printf("[testMixedTxFetching] FAIL: Didn't find expected txn for %s\n", expected.TransactionHash)
 				return false
 			}
+
+			actual.BlockHash = strings.ToLower(actual.BlockHash)
+			actual.From = strings.ToLower(actual.From)
+			actual.To = strings.ToLower(actual.To)
+			actual.ContractAddress = strings.ToLower(actual.ContractAddress)
 
 			if !cmp.Equal(expected, actual) {
 				log.Printf("[testMixedTxFetching] FAIL: unexpected diff for %s, %s\n", expected.TransactionHash, cmp.Diff(expected, actual))
@@ -194,7 +210,7 @@ func testStoredTxAfterMixed(rpcClient *LimeClient) testable {
 		}
 
 		if len(res.Transactions) != len(expectedMixedTxns) {
-			log.Printf("[testStoredTxAfterMixed] FAIL: Wrong count of transactions in the db; expected %d, got %d\n", len(expectedTxns), len(res.Transactions))
+			log.Printf("[testStoredTxAfterMixed] FAIL: Wrong count of transactions in the db; expected %d, got %d\n", len(expectedMixedTxns), len(res.Transactions))
 			return false
 		}
 
@@ -205,6 +221,11 @@ func testStoredTxAfterMixed(rpcClient *LimeClient) testable {
 				log.Printf("[testStoredTxAfterMixed] FAIL: Didn't find expected txn for %s\n", expected.TransactionHash)
 				return false
 			}
+
+			actual.BlockHash = strings.ToLower(actual.BlockHash)
+			actual.From = strings.ToLower(actual.From)
+			actual.To = strings.ToLower(actual.To)
+			actual.ContractAddress = strings.ToLower(actual.ContractAddress)
 
 			if !cmp.Equal(expected, actual) {
 				log.Printf("[testStoredTxAfterMixed] FAIL: unexpected diff for %s, %s\n", expected.TransactionHash, cmp.Diff(expected, actual))
