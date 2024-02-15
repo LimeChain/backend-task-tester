@@ -61,6 +61,18 @@ var expectedMixedTxns = append([]Transaction{{
 },
 }, expectedTxns...)
 
+var expectedRlpTxns = append([]Transaction{{
+	TransactionHash:   "0x07af7f496d552644a743f0d6b1191b4b59abbbf31284da6bc3fee9d96b7c36c2",
+	TransactionStatus: 1,
+	BlockHash:         "0xefdf0a8a757ae93591bae7b308d4b9f6747d6a2a789ad2e6d76e9e21ff96f604",
+	BlockNumber:       7976374,
+	From:              "0xf29a6c0f8ee500dc87d0d4eb8b26a6fac7a76767",
+	To:                "0xe1ee564fdde8d573ff1bb5e77a44cd1b7dda749a",
+	Input:             "0x",
+	Value:             50000000000000000,
+},
+}, expectedMixedTxns...)
+
 func testEmptyInitialAllTx(rpcClient *LimeClient) testable {
 	return func() bool {
 		res, err := rpcClient.GetAll()
@@ -179,32 +191,14 @@ func testRlp(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		if len(res.Transactions) != 6 {
-			log.Println("[testRlp] FAIL: Wrong count of transactions in the db")
+		if len(res.Transactions) != len(expectedRlpTxns) {
+			log.Printf("[testRlp] FAIL: Wrong count of transactions in the db; expected %d, got %d\n", len(expectedRlpTxns), len(res.Transactions))
 			return false
 		}
 
-		if res.Transactions[0].TransactionStatus != 1 {
-			log.Printf("[testRlp] FAIL: Wrong tx status on index %d\n", 0)
+		if ok := compare("testRlp", expectedRlpTxns, res.Transactions); !ok {
 			return false
 		}
-
-		if res.Transactions[1].TransactionStatus != 1 {
-			log.Printf("[testRlp] FAIL: Wrong tx status on index %d\n", 1)
-			return false
-		}
-
-		if res.Transactions[0].TransactionHash != "0x07af7f496d552644a743f0d6b1191b4b59abbbf31284da6bc3fee9d96b7c36c2" {
-			log.Printf("[testRlp] FAIL: Wrong tx status on index %d\n", 0)
-			return false
-		}
-
-		if res.Transactions[1].TransactionHash != "0x451fa2d0b7334ebfb234d10ed3645b8d04c5003c1f18f373f1f09b7bed8568fc" {
-			log.Printf("[testRlp] FAIL: Wrong tx hash on index %d\n", 1)
-			return false
-		}
-
-		// TODO add more cases
 
 		log.Println("[testRlp] SUCCESS")
 		return true
