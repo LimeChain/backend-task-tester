@@ -116,11 +116,13 @@ func (c *LimeClient) PostAuthenticate(username, password string) (*AuthenticateR
 	if err != nil {
 		return nil, err
 	}
-
 	defer resp.Body.Close()
 
-	var authResp AuthenticateResponse
+	if !is2xxStatus(resp.StatusCode) {
+		return nil, fmt.Errorf("/lime/authenticate responded with %d", resp.StatusCode)
+	}
 
+	var authResp AuthenticateResponse
 	if err := json.NewDecoder(resp.Body).Decode(&authResp); err != nil {
 		fmt.Println(err)
 		return nil, err
@@ -133,4 +135,8 @@ func NewLimeAPIClient(endpoint string) *LimeClient {
 	return &LimeClient{
 		endpointURL: endpoint,
 	}
+}
+
+func is2xxStatus(statusCode int) bool {
+	return statusCode >= 200 && statusCode <= 299
 }
