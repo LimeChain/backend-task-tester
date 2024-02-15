@@ -43,6 +43,7 @@ func (c *LimeClient) GetAll() (*TransactionResponse, error) {
 	var txResponse TransactionResponse
 
 	if err := json.NewDecoder(resp.Body).Decode(&txResponse); err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
@@ -69,6 +70,7 @@ func (c *LimeClient) GetEth(rlpString, authToken string) (*TransactionResponse, 
 	var txResponse TransactionResponse
 
 	if err := json.NewDecoder(resp.Body).Decode(&txResponse); err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
@@ -93,6 +95,7 @@ func (c *LimeClient) GetMy(authToken string) (*TransactionResponse, error) {
 	var txResponse TransactionResponse
 
 	if err := json.NewDecoder(resp.Body).Decode(&txResponse); err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
@@ -119,6 +122,7 @@ func (c *LimeClient) PostAuthenticate(username, password string) (*AuthenticateR
 	var authResp AuthenticateResponse
 
 	if err := json.NewDecoder(resp.Body).Decode(&authResp); err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
