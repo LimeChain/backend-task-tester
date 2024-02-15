@@ -6,6 +6,29 @@ import (
 	"os"
 )
 
+var expectedMyTxns = []Transaction{
+	{
+		TransactionHash:   "0x04fcf6e9f6451163a231cc7b5f9ae4b2835dfeb7ff2cb5d29609343f09a30f79",
+		TransactionStatus: 1,
+		BlockHash:         "0xefdf0a8a757ae93591bae7b308d4b9f6747d6a2a789ad2e6d76e9e21ff96f604",
+		BlockNumber:       7976374,
+		From:              "0xf29a6c0f8ee500dc87d0d4eb8b26a6fac7a76767",
+		To:                "0xe97aff2b33383db8235a9b4616dc134f740243ad",
+		Input:             "0x",
+		Value:             50000000000000000,
+	},
+	{
+		TransactionHash:   "0x444b853306b3a4f934c90cb996956966d804edc27fbb67402ebb8294a2cc8fd2",
+		TransactionStatus: 1,
+		BlockHash:         "0xefdf0a8a757ae93591bae7b308d4b9f6747d6a2a789ad2e6d76e9e21ff96f604",
+		BlockNumber:       7976374,
+		From:              "0xf29a6c0f8ee500dc87d0d4eb8b26a6fac7a76767",
+		To:                "0xf020c6df9839b4e919539260b56b55ab40a72451",
+		Input:             "0x",
+		Value:             50000000000000000,
+	},
+}
+
 func testAuthenticate(rpcClient *LimeClient) testable {
 	return func() bool {
 		res, err := rpcClient.PostAuthenticate("carol", "carol")
@@ -63,28 +86,12 @@ func testGetMyTransactions(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		if len(res.Transactions) != 2 {
-			log.Println("[testGetMyTransactions] FAIL: Wrong count of transactions in the db")
+		if len(res.Transactions) != len(expectedMyTxns) {
+			log.Printf("[testGetMyTransactions] FAIL: Wrong count of transactions in the db; expected %d, got %d\n", len(expectedMyTxns), len(res.Transactions))
 			return false
 		}
 
-		if res.Transactions[0].TransactionStatus != 1 {
-			log.Printf("[testGetMyTransactions] FAIL: Wrong tx status on index %d\n", 0)
-			return false
-		}
-
-		if res.Transactions[1].TransactionStatus != 1 {
-			log.Printf("[testGetMyTransactions] FAIL: Wrong tx status on index %d\n", 1)
-			return false
-		}
-
-		if res.Transactions[0].TransactionHash != "0x444b853306b3a4f934c90cb996956966d804edc27fbb67402ebb8294a2cc8fd2" {
-			log.Printf("[testGetMyTransactions] FAIL: Wrong tx status on index %d\n", 0)
-			return false
-		}
-
-		if res.Transactions[1].TransactionHash != "0x04fcf6e9f6451163a231cc7b5f9ae4b2835dfeb7ff2cb5d29609343f09a30f79" {
-			log.Printf("[testGetMyTransactions] FAIL: Wrong tx hash on index %d\n", 1)
+		if ok := compare("testGetMyTransactions", expectedMyTxns, res.Transactions); !ok {
 			return false
 		}
 
@@ -94,28 +101,8 @@ func testGetMyTransactions(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		if len(res.Transactions) != 2 {
-			log.Println("[testGetMyTransactions] FAIL: Wrong count of transactions in the db for carol")
-			return false
-		}
-
-		if res.Transactions[0].TransactionStatus != 1 {
-			log.Printf("[testGetMyTransactions] FAIL: Wrong tx status on index %d\n", 0)
-			return false
-		}
-
-		if res.Transactions[1].TransactionStatus != 1 {
-			log.Printf("[testGetMyTransactions] FAIL: Wrong tx status on index %d\n", 1)
-			return false
-		}
-
-		if res.Transactions[0].TransactionHash != "0x444b853306b3a4f934c90cb996956966d804edc27fbb67402ebb8294a2cc8fd2" {
-			log.Printf("[testGetMyTransactions] FAIL: Wrong tx status on index %d\n", 0)
-			return false
-		}
-
-		if res.Transactions[1].TransactionHash != "0x04fcf6e9f6451163a231cc7b5f9ae4b2835dfeb7ff2cb5d29609343f09a30f79" {
-			log.Printf("[testGetMyTransactions] FAIL: Wrong tx hash on index %d\n", 1)
+		if len(res.Transactions) != len(expectedMyTxns) {
+			log.Printf("[testGetMyTransactions] FAIL: Wrong count of transactions in the db for carol; expected %d, got %d\n", len(expectedMyTxns), len(res.Transactions))
 			return false
 		}
 
@@ -132,7 +119,7 @@ func testDockerfileExists() testable {
 			return false
 		}
 
-		log.Println("[testGetMyTransactions] SUCCESS")
+		log.Println("[testDockerfileExists] SUCCESS")
 		return true
 	}
 }
