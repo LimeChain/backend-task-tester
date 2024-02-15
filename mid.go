@@ -90,37 +90,13 @@ func testExampleTxFetching(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		actualTxns := toMap(res.Transactions)
-		for _, expected := range expectedTxns {
-			actual, found := actualTxns[expected.TransactionHash]
-			if !found {
-				log.Printf("[testExampleTxFetching] FAIL: Didn't find expected txn for %s\n", expected.TransactionHash)
-				return false
-			}
-
-			actual.BlockHash = strings.ToLower(actual.BlockHash)
-			actual.From = strings.ToLower(actual.From)
-			actual.To = strings.ToLower(actual.To)
-			actual.ContractAddress = strings.ToLower(actual.ContractAddress)
-
-			if !cmp.Equal(expected, actual) {
-				log.Printf("[testExampleTxFetching] FAIL: unexpected diff for %s, %s\n", expected.TransactionHash, cmp.Diff(expected, actual))
-				return false
-			}
+		if ok := compare("testExampleTxFetching", expectedTxns, res.Transactions); !ok {
+			return false
 		}
 
 		log.Println("[testExampleTxFetching] SUCCESS")
 		return true
 	}
-}
-
-func toMap(txns []Transaction) map[string]Transaction {
-	result := map[string]Transaction{}
-	for i := 0; i < len(txns); i++ {
-		result[txns[i].TransactionHash] = txns[i]
-	}
-
-	return result
 }
 
 func testStoredTxAfterExample(rpcClient *LimeClient) testable {
@@ -137,23 +113,8 @@ func testStoredTxAfterExample(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		actualTxns := toMap(res.Transactions)
-		for _, expected := range expectedTxns {
-			actual, found := actualTxns[expected.TransactionHash]
-			if !found {
-				log.Printf("[testStoredTxAfterExample] FAIL: Didn't find expected txn for %s\n", expected.TransactionHash)
-				return false
-			}
-
-			actual.BlockHash = strings.ToLower(actual.BlockHash)
-			actual.From = strings.ToLower(actual.From)
-			actual.To = strings.ToLower(actual.To)
-			actual.ContractAddress = strings.ToLower(actual.ContractAddress)
-
-			if !cmp.Equal(expected, actual) {
-				log.Printf("[testStoredTxAfterExample] FAIL: unexpected diff for %s, %s\n", expected.TransactionHash, cmp.Diff(expected, actual))
-				return false
-			}
+		if ok := compare("testStoredTxAfterExample", expectedTxns, res.Transactions); !ok {
+			return false
 		}
 
 		log.Println("[testStoredTxAfterExample] SUCCESS")
@@ -176,23 +137,8 @@ func testMixedTxFetching(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		actualTxns := toMap(res.Transactions)
-		for _, expected := range expectedMixedTxns {
-			actual, found := actualTxns[expected.TransactionHash]
-			if !found {
-				log.Printf("[testMixedTxFetching] FAIL: Didn't find expected txn for %s\n", expected.TransactionHash)
-				return false
-			}
-
-			actual.BlockHash = strings.ToLower(actual.BlockHash)
-			actual.From = strings.ToLower(actual.From)
-			actual.To = strings.ToLower(actual.To)
-			actual.ContractAddress = strings.ToLower(actual.ContractAddress)
-
-			if !cmp.Equal(expected, actual) {
-				log.Printf("[testMixedTxFetching] FAIL: unexpected diff for %s, %s\n", expected.TransactionHash, cmp.Diff(expected, actual))
-				return false
-			}
+		if ok := compare("testMixedTxFetching", expectedMixedTxns, res.Transactions); !ok {
+			return false
 		}
 
 		log.Println("[testMixedTxFetching] SUCCESS")
@@ -214,23 +160,8 @@ func testStoredTxAfterMixed(rpcClient *LimeClient) testable {
 			return false
 		}
 
-		actualTxns := toMap(res.Transactions)
-		for _, expected := range expectedMixedTxns {
-			actual, found := actualTxns[expected.TransactionHash]
-			if !found {
-				log.Printf("[testStoredTxAfterMixed] FAIL: Didn't find expected txn for %s\n", expected.TransactionHash)
-				return false
-			}
-
-			actual.BlockHash = strings.ToLower(actual.BlockHash)
-			actual.From = strings.ToLower(actual.From)
-			actual.To = strings.ToLower(actual.To)
-			actual.ContractAddress = strings.ToLower(actual.ContractAddress)
-
-			if !cmp.Equal(expected, actual) {
-				log.Printf("[testStoredTxAfterMixed] FAIL: unexpected diff for %s, %s\n", expected.TransactionHash, cmp.Diff(expected, actual))
-				return false
-			}
+		if ok := compare("testStoredTxAfterMixed", expectedMixedTxns, res.Transactions); !ok {
+			return false
 		}
 
 		log.Println("[testStoredTxAfterMixed] SUCCESS")
@@ -278,4 +209,36 @@ func testRlp(rpcClient *LimeClient) testable {
 		log.Println("[testRlp] SUCCESS")
 		return true
 	}
+}
+
+func compare(testName string, expectedTxns, actualTxns []Transaction) bool {
+	actualTxnsMap := toMap(actualTxns)
+	for _, expected := range expectedTxns {
+		actual, found := actualTxnsMap[expected.TransactionHash]
+		if !found {
+			log.Printf("[%s] FAIL: Didn't find expected txn for %s\n", testName, expected.TransactionHash)
+			return false
+		}
+
+		actual.BlockHash = strings.ToLower(actual.BlockHash)
+		actual.From = strings.ToLower(actual.From)
+		actual.To = strings.ToLower(actual.To)
+		actual.ContractAddress = strings.ToLower(actual.ContractAddress)
+
+		if !cmp.Equal(expected, actual) {
+			log.Printf("[%s] FAIL: unexpected diff for %s, %s\n", testName, expected.TransactionHash, cmp.Diff(expected, actual))
+			return false
+		}
+	}
+
+	return true
+}
+
+func toMap(txns []Transaction) map[string]Transaction {
+	result := map[string]Transaction{}
+	for i := 0; i < len(txns); i++ {
+		result[txns[i].TransactionHash] = txns[i]
+	}
+
+	return result
 }
