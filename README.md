@@ -10,11 +10,11 @@ INTEGRATED=
 
 # Using the test tool
 
-## Set env variables
+## Set env variables (example setup)
 ```
 export API_PORT="8080"
 export DB_CONNECTION_URL="postgresql://localhost/postgres?user=postgres&password=password1234"
-export ETH_NODE_URL={infura or alchemy endpoint}
+export ETH_NODE_URL=https://goerli.infura.io/v3/b6e734b85b1f42fd94f9fddcbdf556ba
 ```
 
 ## Postgres
