@@ -17,7 +17,7 @@ type Transaction struct {
 	ContractAddress   string `json:"contractAddress"`
 	LogsCount         int    `json:"logsCount"`
 	Input             string `json:"input"`
-	Value             string `json:"value"`
+	Value             int    `json:"value"`
 }
 
 type TransactionResponse struct {
@@ -43,6 +43,7 @@ func (c *LimeClient) GetAll() (*TransactionResponse, error) {
 	var txResponse TransactionResponse
 
 	if err := json.NewDecoder(resp.Body).Decode(&txResponse); err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
@@ -69,6 +70,7 @@ func (c *LimeClient) GetEth(rlpString, authToken string) (*TransactionResponse, 
 	var txResponse TransactionResponse
 
 	if err := json.NewDecoder(resp.Body).Decode(&txResponse); err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
@@ -93,6 +95,7 @@ func (c *LimeClient) GetMy(authToken string) (*TransactionResponse, error) {
 	var txResponse TransactionResponse
 
 	if err := json.NewDecoder(resp.Body).Decode(&txResponse); err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
@@ -113,12 +116,15 @@ func (c *LimeClient) PostAuthenticate(username, password string) (*AuthenticateR
 	if err != nil {
 		return nil, err
 	}
-
 	defer resp.Body.Close()
 
-	var authResp AuthenticateResponse
+	if !is2xxStatus(resp.StatusCode) {
+		return nil, fmt.Errorf("/lime/authenticate responded with %d", resp.StatusCode)
+	}
 
+	var authResp AuthenticateResponse
 	if err := json.NewDecoder(resp.Body).Decode(&authResp); err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
@@ -129,4 +135,8 @@ func NewLimeAPIClient(endpoint string) *LimeClient {
 	return &LimeClient{
 		endpointURL: endpoint,
 	}
+}
+
+func is2xxStatus(statusCode int) bool {
+	return statusCode >= 200 && statusCode <= 299
 }
