@@ -26,7 +26,7 @@ var expectedTxns = []Transaction{
 		To:                "0xb0428bf0d49eb5c2239a815b43e59e124b84e303",
 		From:              "0xf29a6c0f8ee500dc87d0d4eb8b26a6fac7a76767",
 		Input:             "0x",
-		Value:             50000000000000000,
+		Value:             "50000000000000000",
 	},
 	{
 		TransactionHash:   "0x71b9e2b44d40498c08a62988fac776d0eac0b5b9613c37f9f6f9a4b888a8b057",
@@ -45,7 +45,7 @@ var expectedTxns = []Transaction{
 		From:            "0x58fa6ab2931b73a22d85617125b936bd3f74e765",
 		To:              "0x302fd86163cb9ad5533b3952dafa3b633a82bc51",
 		Input:           "0x97da873c0000000000000000000000000000000000000000000000056bc75e2d63100000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000058fa6ab2931b73a22d85617125b936bd3f74e76512d1a55b318c0be714e7ce8bc54a96ac48813cfcb73cbaa0a6e933fa9a35b7bb212c8f9a45c4430a6fa3cb8b67a28403c51e494615df4f826280256a8ddabde630818902818100e4dcd34866228be9255cbd322590b92ded49868321f0535734587348c4cb450d2d68367f686faa4688410662e9f38dc62a742f71d8e81b40a3c444381ee1245024467c8f29f04f0f83059dee234f1d4ab13e536eb5958adf91782ed3495b36fd5db6e76626771d998d6e4c75eceb58e1c783b33920dcd7723fbfbc33ba6d5ff902030100010000000000000000000000000000000000000000",
-		Value:           1265249737905771,
+		Value:           "1265249737905771",
 	},
 }
 
@@ -57,7 +57,7 @@ var expectedMixedTxns = append([]Transaction{{
 	From:              "0xf29a6c0f8ee500dc87d0d4eb8b26a6fac7a76767",
 	To:                "0xfac0844034620603b4c042b9f7c5cbfa6157e626",
 	Input:             "0x",
-	Value:             50000000000000000,
+	Value:             "50000000000000000",
 },
 }, expectedTxns...)
 
@@ -69,7 +69,7 @@ var expectedRlpTxns = append([]Transaction{{
 	From:              "0xf29a6c0f8ee500dc87d0d4eb8b26a6fac7a76767",
 	To:                "0xe1ee564fdde8d573ff1bb5e77a44cd1b7dda749a",
 	Input:             "0x",
-	Value:             50000000000000000,
+	Value:             "50000000000000000",
 },
 }, expectedMixedTxns...)
 

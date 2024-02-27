@@ -17,7 +17,7 @@ type Transaction struct {
 	ContractAddress   string `json:"contractAddress"`
 	LogsCount         int    `json:"logsCount"`
 	Input             string `json:"input"`
-	Value             int    `json:"value"`
+	Value             string `json:"value"`
 }
 
 type TransactionResponse struct {

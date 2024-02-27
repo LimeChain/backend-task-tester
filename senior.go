@@ -15,7 +15,7 @@ var expectedMyTxns = []Transaction{
 		From:              "0xf29a6c0f8ee500dc87d0d4eb8b26a6fac7a76767",
 		To:                "0xe97aff2b33383db8235a9b4616dc134f740243ad",
 		Input:             "0x",
-		Value:             50000000000000000,
+		Value:             "50000000000000000",
 	},
 	{
 		TransactionHash:   "0x444b853306b3a4f934c90cb996956966d804edc27fbb67402ebb8294a2cc8fd2",
@@ -25,7 +25,7 @@ var expectedMyTxns = []Transaction{
 		From:              "0xf29a6c0f8ee500dc87d0d4eb8b26a6fac7a76767",
 		To:                "0xf020c6df9839b4e919539260b56b55ab40a72451",
 		Input:             "0x",
-		Value:             50000000000000000,
+		Value:             "50000000000000000",
 	},
 }
 
